@@ -4,15 +4,17 @@ State management with saga-pattern side effects, built on [Effect-TS](https://ef
 
 The saga pattern with real structured concurrency — typed cancellation, scoped lifetimes, and fiber-based coordination powered by Effect's runtime.
 
-> **Early experimental release.** The API is unstable and may change between versions. Expect breaking changes without notice.
+> ⚠️ **Pre-1.0 experimental release.** The API is unstable and may change between versions. Expect breaking changes without notice.
 
 ## Why
+
+As Effect grows in popularity, developers need a way to manage application state that leverages the runtime they're already using — without being locked to a specific UI framework.
 
 Redux-saga showed that long-running processes coordinating side effects via actions is a powerful model. effect-saga brings that model to Effect-TS — a real fiber runtime with typed cancellation, scoped lifetimes, and structured concurrency built in.
 
 effect-saga connects a minimal store (reducer + action stream) with the familiar saga combinators (`takeEvery`, `takeLatest`, `takeLeading`, `debounce`) — backed by real fiber interruption and typed effects. Because processes are plain Effects, all the async machinery — retries, timeouts, scheduling, resource management, dependency injection — comes from the Effect ecosystem natively. No reinventing the wheel.
 
-The key design constraint: **Effect types never leak to the UI.** The store exposes a plain JS `StoreHandle` — `put`, `subscribe`, `getState` — that any framework can consume. Processes run in Effect-land with full access to the fiber runtime. The core is UI-agnostic; framework bindings are thin adapters. Lit is supported today, React is coming soon.
+**Leverage the power of Effect for state, and let UI libraries do the thing they're actually good at.** Bridge effect-saga natively into your reactive UI library of choice — [React](#react) via hooks, [Lit](#lit) via reactive controllers. First class developer experience on both sides of the fold.
 
 ## Install
 
@@ -101,6 +103,24 @@ store.handle.subscribe(fn)      // () => void (unsubscribe)
 ```
 
 The bridge between these two worlds is automatic — actions dispatched via the handle are queued and processed by the Effect runtime.
+
+### `createStoreRef`
+
+The idea: let Effect handle state, coordination, and side effects — let UI libraries do the thing they're actually good at (rendering). But Effect boots asynchronously, and your UI needs a store reference at import time. `createStoreRef` bridges this gap — it returns a handle you can use immediately, buffering actions and subscriptions until the real store is ready:
+
+```ts
+import { createStoreRef } from "effect-saga";
+
+const { ref, attach } = createStoreRef<State, Action>(initialState);
+
+// Use ref immediately (actions buffer until attach)
+ref.put({ id: "early-action" });
+ref.subscribe((s) => render(s));
+
+// Later, when the Effect runtime is ready:
+const store = yield* makeStore(config);
+attach(store);  // flushes buffered actions, replays subscribers
+```
 
 ### Reducers
 
@@ -199,24 +219,6 @@ Unnecessary re-renders are avoided at two levels:
 Together these mean you can freely select derived data (filtered lists, computed objects) without worrying about spurious updates.
 
 ## Integration
-
-### `createStoreRef`
-
-Effect boots asynchronously, but your UI needs a store reference at import time. `createStoreRef` bridges this gap — it returns a handle you can use immediately, buffering actions and subscriptions until the real store is ready:
-
-```ts
-import { createStoreRef } from "effect-saga";
-
-const { ref, attach } = createStoreRef<State, Action>(initialState);
-
-// Use ref immediately (actions buffer until attach)
-ref.put({ id: "early-action" });
-ref.subscribe((s) => render(s));
-
-// Later, when the Effect runtime is ready:
-const store = yield* makeStore(config);
-attach(store);  // flushes buffered actions, replays subscribers
-```
 
 ### Lit
 
