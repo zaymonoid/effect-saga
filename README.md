@@ -20,17 +20,17 @@ effect-saga connects a minimal store (reducer + action stream) with the familiar
 
 ```bash
 # npm
-npm install effect-saga effect
+npm install @zaymonoid/effect-saga effect
 
 # deno
-deno add npm:effect-saga npm:effect
+deno add jsr:@zaymonoid/effect-saga npm:effect
 ```
 
 ## Quick start
 
 ```ts
-import { combinators, createStoreRef, makeStore } from "effect-saga";
-import type { Process } from "effect-saga";
+import { combinators, createStoreRef, makeStore } from "@zaymonoid/effect-saga";
+import type { Process } from "@zaymonoid/effect-saga";
 import { Effect } from "effect";
 
 // 1. Define your state and actions
@@ -121,7 +121,7 @@ For rendering, prefer the [UI integrations](#integration) (`fromStore` for Lit, 
 Effect boots asynchronously, but your app needs a store reference at import time. `createStoreRef` bridges this gap — it returns a `StoreHandle` you can use immediately, buffering actions and subscriptions until the real store is attached and ready:
 
 ```ts
-import { createStoreRef } from "effect-saga";
+import { createStoreRef } from "@zaymonoid/effect-saga";
 
 const { ref, attach } = createStoreRef<State, Action>(initialState);
 
@@ -139,8 +139,8 @@ attach(store); // flushes buffered actions, replays subscribers
 Standard `(state, action) => state` with one twist: returning `undefined` means "no change". This enables `combineReducers` to preserve referential equality when a slice doesn't handle an action:
 
 ```ts
-import { combineReducers } from "effect-saga";
-import type { Reducer, StateOf, ActionsOf } from "effect-saga";
+import { combineReducers } from "@zaymonoid/effect-saga";
+import type { Reducer, StateOf, ActionsOf } from "@zaymonoid/effect-saga";
 
 const rootReducer = combineReducers({
   users: usersReducer,
@@ -158,7 +158,7 @@ type AppAction = ActionsOf<typeof rootReducer>;
 A process is an Effect that runs for the lifetime of the store. It receives a `StoreContext` with access to the action stream and state:
 
 ```ts
-import type { Process } from "effect-saga";
+import type { Process } from "@zaymonoid/effect-saga";
 
 const myProcess: Process<State, Action> = (ctx) =>
   Effect.gen(function* () {
@@ -189,8 +189,8 @@ Saga-style concurrency strategies for handling actions. Each returns a `Process`
 Each combinator subscribes to the action stream and forks a long-lived listener fiber. Calling `yield* search(ctx)` sets up the listener and **returns immediately** — it doesn't block. So yielding multiple combinators in sequence starts concurrent listeners, not a sequential chain. Processes compose the same way: a sub-process yields to its combinators, and the root process yields to sub-processes.
 
 ```ts
-import { combinators } from "effect-saga";
-import type { Process } from "effect-saga";
+import { combinators } from "@zaymonoid/effect-saga";
+import type { Process } from "@zaymonoid/effect-saga";
 
 // Bind your state/action types once — all combinators are fully typed from here
 const { takeLatest, takeEvery, debounce } = combinators<State, Action>();
@@ -239,7 +239,7 @@ Together these mean you can freely select derived data (filtered lists, computed
 Reactive controller for [Lit](https://lit.dev) components. Selectors are compared with deep equality — derived objects and filtered arrays won't cause re-renders unless the values actually change.
 
 ```ts
-import { fromStore } from "effect-saga/lit";
+import { fromStore } from "@zaymonoid/effect-saga/lit";
 
 class MyComponent extends LitElement {
   private count = fromStore(this, store, (s) => s.count);
@@ -291,7 +291,7 @@ import {
   defineQuery,
   queriesReducer,
   initialQueriesState,
-} from "effect-saga/query";
+} from "@zaymonoid/effect-saga/query";
 
 // Single: one user at a time
 const userQuery = defineQuery<User, AppState>("user", (state) =>
@@ -332,7 +332,7 @@ const cached = userQuery.select(store.handle.getState());
 ### Query devtools
 
 ```ts
-import "effect-saga/query-devtools";
+import "@zaymonoid/effect-saga/query-devtools";
 ```
 
 ```html

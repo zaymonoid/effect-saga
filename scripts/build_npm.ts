@@ -25,7 +25,7 @@ await build({
     "npm:date-fns@^4.1.0": { name: "date-fns", version: "^4.1.0", peerDependency: true },
   },
   package: {
-    name: "effect-saga",
+    name: "@zaymonoid/effect-saga",
     version: Deno.args[0] ?? "0.1.0",
     description: "Saga-pattern state management built on Effect-TS structured concurrency",
     license: "MIT",
