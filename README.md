@@ -118,7 +118,7 @@ For rendering, prefer the [UI integrations](#integration) (`fromStore` for Lit, 
 
 ### `createStoreRef`
 
-The idea: let Effect handle state, coordination, and side effects — let UI libraries do the thing they're actually good at (rendering). But Effect boots asynchronously, and your UI needs a store reference at import time. `createStoreRef` bridges this gap — it returns a handle you can use immediately, buffering actions and subscriptions until the real store is ready:
+Effect boots asynchronously, but your app needs a store reference at import time. `createStoreRef` bridges this gap — it returns a `StoreHandle` you can use immediately, buffering actions and subscriptions until the real store is attached and ready:
 
 ```ts
 import { createStoreRef } from "effect-saga";
