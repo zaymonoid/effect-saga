@@ -4,6 +4,8 @@ State management with saga-pattern side effects, built on [Effect-TS](https://ef
 
 The saga pattern done right — Effect's fiber runtime gives you typed cancellation, scoped lifetimes, and structured concurrency where redux-saga gave you generator tricks and a prayer.
 
+> **Early experimental release.** The API is unstable and may change between versions. Expect breaking changes without notice.
+
 ## Why
 
 Redux-saga showed that long-running processes coordinating side effects via actions is a great model. But its use of generators is a hack — `yield` simulates concurrency without actually having it. Cancellation is bolted on, error handling is stringly-typed, and there's no structured lifetime management.
