@@ -1,6 +1,6 @@
 # katha
 
-> **katha** /kə.tʰɑː/ _n. Sanskrit_ — a story; a narrative told in sequence, where each event arises from the last and shapes what follows.
+> **katha** (कथा) /kə.tʰɑː/ _n. Sanskrit_ — a story; a narrative told in sequence, where each event arises from the last and shapes what follows.
 
 Core state management and sagas in [Effect-TS](https://effect.website).
 
@@ -12,11 +12,11 @@ A minimal store (reducers, action stream, selectors) plus the saga pattern — l
 
 As Effect grows in popularity, developers need a way to manage application state that leverages the runtime they're already using — without being locked to a specific UI framework.
 
-Redux-saga showed that long-running processes coordinating side effects via actions is a powerful model. katha brings that model to Effect-TS — a real fiber runtime with typed cancellation, scoped lifetimes, and structured concurrency built in.
+Redux-saga showed that long-running processes coordinating side effects via actions is a powerful model. katha brings that model to Effect-TS, where the runtime already provides everything sagas need.
 
-katha connects a minimal store (reducer + action stream) with the familiar saga combinators (`takeEvery`, `takeLatest`, `takeLeading`, `debounce`) — backed by real fiber interruption and typed effects. Because processes are plain Effects, all the async machinery — retries, timeouts, scheduling, resource management, dependency injection — comes from the Effect ecosystem natively. No reinventing the wheel.
+katha connects a minimal store (reducer + action stream) with the familiar saga combinators (`takeEvery`, `takeLatest`, `takeLeading`, `debounce`). Because processes are plain Effects, all the async machinery — retries, timeouts, scheduling, resource management, dependency injection — comes from the Effect ecosystem natively. No reinventing the wheel.
 
-**Leverage the power of Effect for state, and let UI libraries do the thing they're actually good at.** Bridge katha natively into your reactive UI library of choice — [React](#react) via hooks, [Lit](#lit) via reactive controllers. First class developer experience on both sides of the fold.
+**Leverage the power of Effect for state, and let UI libraries do the thing they're actually good at.** [Bridge katha](#integration) natively into your reactive UI library of choice — React via hooks, Lit via reactive controllers. First class developer experience on both sides of the fold.
 
 ## Install
 
