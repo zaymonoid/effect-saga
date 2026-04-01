@@ -108,7 +108,7 @@ ctx.state; // SubscriptionRef<S> — reactive state stream
 ctx.actions; // PubSub<A> — raw action stream
 ```
 
-**UI code** interacts with a `StoreHandle` — a plain JS interface with no Effect types. You get one from `createStoreRef`:
+**Consuming code** interacts with a `StoreHandle` — a plain JS interface with no Effect types. You get one from `createStoreRef`:
 
 ```ts
 store.put(action); // void — dispatch an action
@@ -230,7 +230,7 @@ const root: Process<State, Action> = (ctx) =>
 Unnecessary re-renders are avoided at two levels:
 
 1. **Reducers** — returning `undefined` means "no change", preserving the previous state reference. `combineReducers` only allocates a new object when at least one slice actually changed.
-2. **Selectors** — UI bindings like `fromStore` use deep equality (`fast-equals`) to compare selected values. Even if the state reference changes, the component only re-renders when the selected slice is structurally different.
+2. **Selectors** — consumer bindings like `fromStore` use deep equality (`fast-equals`) to compare selected values. Even if the state reference changes, subscribers only re-render when the selected slice is structurally different.
 
 Together these mean you can freely select derived data (filtered lists, computed objects) without worrying about spurious updates.
 
