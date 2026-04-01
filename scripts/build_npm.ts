@@ -28,7 +28,7 @@ await build({
   },
   package: {
     name: "@zaymonoid/katha",
-    version: Deno.args[0] ?? "0.1.0",
+    version: Deno.args[0] ?? JSON.parse(Deno.readTextFileSync("deno.json")).version,
     description: "Saga-pattern state management built on Effect-TS structured concurrency",
     license: "MIT",
     repository: {
