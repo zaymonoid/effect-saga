@@ -24,7 +24,6 @@ await build({
   mappings: {
     "npm:react@^18.0.0": { name: "react", version: "^18.0.0 || ^19.0.0", peerDependency: true },
     "npm:lit@^3.0.0": { name: "lit", version: "^3.0.0", peerDependency: true },
-    "npm:date-fns@^4.1.0": { name: "date-fns", version: "^4.1.0", peerDependency: true },
   },
   package: {
     name: "@zaymonoid/katha",
@@ -42,12 +41,10 @@ await build({
     peerDependencies: {
       react: "^18.0.0 || ^19.0.0",
       lit: "^3.0.0",
-      "date-fns": "^4.1.0",
     },
     peerDependenciesMeta: {
       react: { optional: true },
       lit: { optional: true },
-      "date-fns": { optional: true },
     },
     publishConfig: {
       access: "public",

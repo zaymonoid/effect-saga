@@ -7,7 +7,6 @@
  * @module
  */
 
-import { formatDistanceToNow } from "date-fns";
 import { html, LitElement, nothing, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
@@ -81,9 +80,51 @@ const STATUS_STYLES = {
   error: { dot: "bg-red-500", ring: "ring-red-500/50", pill: "bg-red-500/20 text-red-400" },
 } as const;
 
+/**
+ * Minimal English-only relative time formatter.
+ * Covers the same buckets as date-fns `formatDistanceToNow` for devtools use.
+ * Adapted from date-fns (MIT) — https://github.com/date-fns/date-fns
+ */
+function formatDistanceToNow(ts: number): string {
+  const seconds = Math.round((Date.now() - ts) / 1000);
+  const minutes = Math.round(seconds / 60);
+  const hours = Math.round(minutes / 60);
+  const days = Math.round(hours / 24);
+  const months = Math.round(days / 30);
+  const years = Math.round(days / 365.25);
+
+  const past = seconds >= 0;
+  const abs = (n: number) => Math.abs(n);
+
+  const label =
+    abs(seconds) < 60
+      ? "less than a minute"
+      : abs(minutes) < 2
+        ? "1 minute"
+        : abs(minutes) < 45
+          ? `${abs(minutes)} minutes`
+          : abs(minutes) < 90
+            ? "about 1 hour"
+            : abs(hours) < 24
+              ? `about ${abs(hours)} hours`
+              : abs(hours) < 42
+                ? "1 day"
+                : abs(days) < 30
+                  ? `${abs(days)} days`
+                  : abs(months) < 2
+                    ? "about 1 month"
+                    : abs(months) < 12
+                      ? `${abs(months)} months`
+                      : abs(years) < 2
+                        ? "about 1 year"
+                        : `about ${abs(years)} years`;
+
+  return past ? `${label} ago` : `in ${label}`;
+}
+
 function relativeTime(ts: number | undefined): string {
   if (ts === undefined) return "—";
-  return formatDistanceToNow(ts, { addSuffix: true });
+  return formatDistanceToNow(ts);
 }
 
 function absoluteTime(ts: number | undefined): string {

@@ -150,6 +150,13 @@ Reducers are pure functions that take the current state and an action and return
 import type { Reducer } from "@zaymonoid/katha";
 
 type Toast = { id: string; message: string; duration: number };
+
+const makeToast = (message: string, duration = 3000): Toast => ({
+  id: ulid(),
+  message,
+  duration,
+});
+
 type ToastAction =
   | { id: "toast/show"; data: Toast }
   | { id: "toast/clear"; data: { id: string } };
@@ -172,15 +179,9 @@ const toastReducer: Reducer<ToastState, ToastAction> = (state, action) => {
 };
 ```
 
-Notice that `Toast` arrives fully formed — the `id` is generated *before* it reaches the reducer. Reducers must be pure and deterministic, so side-effects like ID generation belong in a helper at the call site:
+Notice that `Toast` arrives fully formed — the `id` is generated *before* it reaches the reducer. Reducers must be pure and deterministic, so side-effects like ID generation belong in a helper like `makeToast` above:
 
 ```ts
-const makeToast = (message: string, duration = 3000): Toast => ({
-  id: ulid(),
-  message,
-  duration,
-});
-
 // at the call site
 store.put({ id: "toast/show", data: makeToast("Saved!") });
 ```
